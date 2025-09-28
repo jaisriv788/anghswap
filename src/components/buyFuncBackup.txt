@@ -1,0 +1,225 @@
+const handleSwapButtonClick = async () => {
+    if (!isConnected) {
+      connectWallet();
+      return;
+    }
+    if (priceIntervalId) {
+      clearInterval(priceIntervalId);
+      setPriceIntervalId(null);
+    }
+    if (SILP_PAGE < 0.1 || DEAD_LINE < 1) {
+      showError("Either Slippage Or Transaction Deadline Is Low!");
+      return;
+    }
+
+    if (SILP_PAGE > 5 && SILP_PAGE < 50) {
+      showError("Slippage exceeds 5%. Your transaction may be frontrun.");
+      return;
+    }
+
+    if (SILP_PAGE >= 50) {
+      showError("Invalid: Slippage cannot exceed 50%!");
+      return;
+    }
+
+    if (DEAD_LINE > 10) {
+      showError("Invalid: Deadline cannot exceed 10 min!");
+      return;
+    }
+
+    try {
+      if (
+        (!fromToken && !toToken) ||
+        (!fromAmount && !toAmount) ||
+        (parseFloat(fromAmount) <= 0 && parseFloat(toAmount) <= 0)
+      ) {
+        showError("Invalid: Check token and amount!");
+        return;
+      }
+
+      setLoading(true);
+      const tokenA = getTokenBySymbol(fromToken);
+      const tokenB = getTokenBySymbol(toToken);
+
+      const value = parseUnits(fromAmount, 18);
+
+      let txHash;
+      let srcChain;
+      let destChain;
+      const recipient = walletAddress;
+      if (tokenA.symbol == "USDT-OpBNB") {
+        await switchNetworkToOpBNB(provider2 || window.ethereum);
+
+        const bridge = new ethers.Contract(OPBNB_BRIDGE, opBridgeAbi, signer);
+        const usdt = new ethers.Contract(tokenA.address, erc20Abi, signer);
+        const allowance = await usdt.allowance(walletAddress, OPBNB_BRIDGE);
+        if (allowance < value) {
+          const approveTx = await usdt.approve(OPBNB_BRIDGE, value);
+          console.log("Waiting for approval confirmation...");
+          await approveTx.wait();
+          console.log("Approval confirmed.");
+        }
+        const tx = await bridge.deposit(value, { gasLimit: 300000 });
+        await tx.wait();
+        txHash = tx.hash;
+        srcChain = "opbnb";
+        destChain = "angh";
+        console.log({ txHash, srcChain, destChain });
+        await switchNetworkToAngh(provider2 || window.ethereum);
+      } else {
+        await switchNetworkToAngh(provider2 || window.ethereum);
+        const bridge = new ethers.Contract(ANGH_BRIDGE, anghBridgeAbi, signer);
+        if (tokenA.symbol == "ANGH") {
+          const tx = await bridge.depositNative({ value });
+          tx.wait();
+          txHash = tx.hash;
+          srcChain = "angh";
+          destChain = "opbnb";
+          console.log({ txHash, srcChain, destChain });
+        } else {
+          const tokenCtr = new ethers.Contract(
+            tokenA.address,
+            erc20Abi,
+            signer
+          );
+          const allowance = await tokenCtr.allowance(
+            walletAddress,
+            ANGH_BRIDGE
+          );
+          if (allowance < value) {
+            const approveTx = await tokenCtr.approve(ANGH_BRIDGE, value);
+            console.log("Waiting for approval confirmation...");
+            await approveTx.wait();
+            console.log("Approval confirmed.");
+          }
+          const tx = await bridge.depositToken(tokenA.address, value, {
+            gasLimit: 300000,
+          });
+          await tx.wait();
+          txHash = tx.hash;
+          srcChain = "angh";
+          destChain = "opbnb";
+          console.log({ txHash, srcChain, destChain });
+        }
+      }
+
+      let desiredToken;
+
+      if (tokenB.symbol == "ANGH") {
+        desiredToken = zeroAddress;
+      } else {
+        desiredToken = tokenB.address;
+      }
+      console.log({ srcChain, txHash, destChain, desiredToken, recipient });
+
+      async function hitAfterDelay() {
+        try {
+          const res = await axios.post(
+            "https://anghswap.info:3535/verify-and-sign",
+            {
+              srcChain,
+              txHash,
+              destChain,
+              desiredToken,
+              recipient,
+            }
+          );
+          const data = await res.data;
+
+          if (!data.ok) {
+            console.log("Relayer error: " + JSON.stringify(data));
+            return;
+          }
+
+          if (destChain === "opbnb") {
+            await switchNetworkToOpBNB(provider2 || window.ethereum);
+
+            const bridge = new ethers.Contract(
+              OPBNB_BRIDGE,
+              opBridgeAbi,
+              signer
+            );
+            const amount = parseUnits(toAmount, 18);
+            const tx = await bridge.claim(
+              270504,
+              txHash,
+              recipient,
+              amount,
+              data.signature,
+              { gasLimit: 600000 }
+            );
+            await tx.wait();
+            console.log(tx.hash);
+            await switchNetworkToAngh(provider2 || window.ethereum);
+          } else {
+            await switchNetworkToAngh(provider2 || window.ethereum);
+            const bridge = new ethers.Contract(
+              ANGH_BRIDGE,
+              anghBridgeAbi,
+              signer
+            );
+
+            const amount = parseUnits(toAmount, 18);
+            let tx;
+
+            let tokenAddr;
+
+            if (tokenB.symbol == "ANGH") {
+              tokenAddr = zeroAddress;
+            } else {
+              tokenAddr = tokenB.address;
+            }
+            console.log({ txHash });
+            tx = await bridge.claim(
+              204,
+              txHash,
+              recipient,
+              tokenAddr,
+              amount,
+              data.signature,
+              { gasLimit: 600000 }
+            );
+
+            await tx.wait();
+            console.log(tx.hash);
+            setBalanceRefresh((prev) => prev + 1);
+          }
+          dispatch(setSuccessMessage("Swap successful!"));
+          dispatch(isSuccessModalVisible(true));
+          setTimeout(() => {
+            dispatch(setSuccessMessage(""));
+            dispatch(isSuccessModalVisible(false));
+          }, 1500);
+          setBalanceRefresh((prev) => prev + 1);
+          setFromAmount("");
+          setToAmount("");
+          setLoading(false);
+          window.location.reload();
+        } catch (err) {
+          console.log("Relayer error: " + JSON.stringify(err));
+          dispatch(setSuccessMessage("Swap successful!"));
+          dispatch(isSuccessModalVisible(true));
+          setTimeout(() => {
+            dispatch(setSuccessMessage(""));
+            dispatch(isSuccessModalVisible(false));
+          }, 1500);
+          setFromAmount("");
+          setToAmount("");
+          setLoading(false);
+          setBalanceRefresh((prev) => prev + 1);
+          window.location.reload();
+          return;
+        }
+      }
+
+      setTimeout(() => {
+        hitAfterDelay();
+      }, 60000);
+    } catch (err) {
+      console.error("Approval failed:", err);
+      setLoading(false);
+      showError("Transaction Failed!");
+    } finally {
+      setBalanceRefresh((prev) => prev + 1);
+    }
+  };

@@ -1,0 +1,61 @@
+// import doge from "../assets/tokens/doge.png";
+import usdt from "../assets/tokens/usdt.svg";
+import floki from "../assets/tokens/floki.svg";
+import dai from "../assets/tokens/dai.svg";
+
+export const tokens = [
+  {
+    symbol: "USDT-ANGH20",
+    name: "ANGH USDT",
+    icon: usdt,
+    address: "0xd1b7916d20F3b9D439B66AF25FC45f6A28c157d0",
+    decimals: 18,
+  },
+  {
+    symbol: "ANGH",
+    name: "ANGH Native",
+    icon: floki,
+    address: "0x6a5f01FD554038756B107002E0ACD7d8f15A97Bc",
+    decimals: 18,
+  },
+  {
+    symbol: "AFT",
+    name: "AFT TOKEN",
+    icon: dai,
+    address: "0xe6f301328e7d5621eaa6cd6cce194eb9df768eeb",
+    decimals: 18,
+  },
+];
+// 0x447c7dBEAB63Ca1813839d53C51EACaF2b09f14F
+export const pairs = [
+  {
+    symbolA: "USDT-ANGH20",
+    tokenA: "0xd1b7916d20F3b9D439B66AF25FC45f6A28c157d0",
+    decimalsA: 18,
+    iconA: usdt,
+    symbolB: "ANGH",
+    tokenB: "0x6a5f01FD554038756B107002E0ACD7d8f15A97Bc",
+    decimalsB: 18,
+    iconB: floki,
+  },
+  {
+    symbolA: "USDT-ANGH20",
+    tokenA: "0xd1b7916d20F3b9D439B66AF25FC45f6A28c157d0",
+    decimalsA: 18,
+    iconA: usdt,
+    symbolB: "AFT",
+    tokenB: "0xe6f301328e7d5621eaa6cd6cce194eb9df768eeb",
+    decimalsB: 18,
+    iconB: dai,
+  },
+  {
+    symbolA: "ANGH",
+    tokenA: "0x6a5f01FD554038756B107002E0ACD7d8f15A97Bc",
+    decimalsA: 18,
+    iconA: floki,
+    symbolB: "AFT",
+    tokenB: "0xe6f301328e7d5621eaa6cd6cce194eb9df768eeb",
+    decimalsB: 18,
+    iconB: dai,
+  },
+];
