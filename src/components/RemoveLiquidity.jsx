@@ -282,6 +282,7 @@ function RemoveLiquidity({ setShowRemoveModal, setClickedPool, data }) {
             <div className="flex-1">
               <input
                 value={actualValue}
+                type="number"
                 onChange={(e) => {
                   setActualValue(e.target.value);
                   setRemoveAmount(0);

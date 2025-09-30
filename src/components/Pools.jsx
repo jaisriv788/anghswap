@@ -4,7 +4,7 @@ import factoryAbi from "../factoryAbi.json";
 // import { pairs } from "../Data/data";
 import { ethers } from "ethers";
 import pairAbi from "../pairAbi.json";
-import { X } from "lucide-react";
+import { Copy, X } from "lucide-react";
 import { tokens as initialTokens } from "../Data/data";
 import RemoveLiquidity from "./RemoveLiquidity";
 
@@ -146,7 +146,7 @@ function Pools({ handlePoolAddLiquidity, refresh }) {
   useEffect(() => {
     const loadPairs = async () => {
       const res = await fetchPairs();
-      // console.log("Fetched pairs:", res);
+      console.log("Fetched pairs:", res);
       if (res.length > 0) {
         setLiquidityPools(res);
       } else {
@@ -224,7 +224,7 @@ function Pools({ handlePoolAddLiquidity, refresh }) {
             <div className="font-bold">
               Liquidity -{" "}
               <span className="font-semibold">
-                {clickedPool.userLP} ({clickedPool.sharePercentage}%)
+                {parseFloat(clickedPool.userLP).toFixed(8)} ({clickedPool.sharePercentage}%)
               </span>
             </div>
             <div className="bg-gray-200 p-2 rounded-xl">
@@ -422,7 +422,10 @@ function Pools({ handlePoolAddLiquidity, refresh }) {
                 {liquidityPools.map((item, index) => (
                   <div
                     key={index}
-                    onClick={() => handleLiquidityAction(item)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLiquidityAction(item);
+                    }}
                     className="cursor-pointer group relative overflow-hidden 
                        rounded-2xl border border-gray-200 bg-white 
                        shadow-sm hover:shadow-lg 
@@ -438,7 +441,7 @@ function Pools({ handlePoolAddLiquidity, refresh }) {
 
                     <div className="relative p-5">
                       {/* Pair icons */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between gap-2">
                         <div className="relative flex">
                           {item.iconA ? (
                             <img
@@ -461,6 +464,26 @@ function Pools({ handlePoolAddLiquidity, refresh }) {
                             </div>
                           )}
                         </div>
+                        <span className="flex gap-2 font-bold items-center">
+                          {item.lpToken.slice(0, 5) +
+                            ".." +
+                            item.lpToken.slice(-5)}
+                          <Copy
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigator.clipboard
+                                .writeText(item.lpToken)
+                                .then(() => {
+                                  alert("Copied to clipboard!");
+                                })
+                                .catch((err) => {
+                                  console.error("Failed to copy: ", err);
+                                });
+                            }}
+                            className="hover:text-blue-600 transition ease-in-out duration-300"
+                            size={13}
+                          />
+                        </span>
                       </div>
 
                       {/* Pair info */}
@@ -484,13 +507,13 @@ function Pools({ handlePoolAddLiquidity, refresh }) {
                             className="hidden sm:inline-flex items-center gap-1 font-medium text-gray-800 
                                bg-blue-50 px-3 py-1 rounded-lg shadow-sm"
                           >
-                            <span>{item.userLP}</span>
+                            <span>{parseFloat(item.userLP).toFixed(6)}</span>
                             <span className="text-blue-600">
                               ({item.sharePercentage}%)
                             </span>
                           </span>
                           <span className="sm:hidden inline-flex text-gray-700 bg-gray-100 px-2 py-0.5 rounded-md shadow-sm">
-                            {parseFloat(item.userLP).toFixed(8)} (
+                            {parseFloat(item.userLP).toFixed(4)} (
                             {parseFloat(item.sharePercentage)}%)
                           </span>
                         </div>

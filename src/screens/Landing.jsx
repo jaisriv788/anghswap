@@ -4,7 +4,7 @@ import angh from "../assets/tokens/angh.jpg";
 import usdt from "../assets/tokens/usdt.png";
 import znx from "../assets/tokens/znx.png";
 
-export default function HomePage({showModal}) {
+export default function HomePage({ showModal }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -54,6 +54,19 @@ export default function HomePage({showModal}) {
         </div>
       </div>
 
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `
+        linear-gradient(to right, rgba(229,231,235,0.8) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(229,231,235,0.8) 1px, transparent 1px),
+        radial-gradient(circle 500px at 0% 20%, rgba(139,92,246,0.3), transparent),
+        radial-gradient(circle 500px at 100% 0%, rgba(59,130,246,0.3), transparent)
+      `,
+          backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
+        }}
+      />
+      
       <section className="min-h-screen flex items-center px-1 sm:px-6 lg:px-8 relative z-10 pt-20 sm:pt-16">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 lg:pb-0 pb-10 lg:grid-cols-2 gap-8 lg:gap-12 items-center">

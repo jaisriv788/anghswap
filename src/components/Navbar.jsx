@@ -56,7 +56,7 @@ function Navbar({ showModal }) {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-40 bg-background/80 backdrop-blur-md border-b border-border transition-all duration-500 ${
+      className={`fixed top-0 w-full z-40 bg-background/60 backdrop-blur-md border-b border-border transition-all duration-500 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >
@@ -82,7 +82,7 @@ function Navbar({ showModal }) {
                 Trade
               </a>
               <a
-                onClick={() => navigate("/liquidity")}
+                onClick={() => navigate("/#")}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Liquidity
@@ -94,7 +94,7 @@ function Navbar({ showModal }) {
                 Withdraw
               </a> */}
               <a
-                onClick={() => navigate("/buy")}
+                onClick={() => navigate("/#")}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Buy
@@ -159,13 +159,13 @@ function Navbar({ showModal }) {
                   Trade
                 </a>
               </li>
-              <li onClick={() => navigate("/liquidity")}>
+              <li onClick={() => navigate("/#")}>
                 <a>
                   <HandCoins size={15} />
                   Liquidity
                 </a>
               </li>
-              <li onClick={() => navigate("/buy")}>
+              <li onClick={() => navigate("/#")}>
                 <a>
                   <ShoppingBag size={15} />
                   Buy
