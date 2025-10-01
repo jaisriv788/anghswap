@@ -82,7 +82,7 @@ function Navbar({ showModal }) {
                 Trade
               </a>
               <a
-                onClick={() => navigate("/#")}
+                onClick={() => navigate("/liquidity")}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Liquidity
@@ -94,7 +94,7 @@ function Navbar({ showModal }) {
                 Withdraw
               </a> */}
               <a
-                onClick={() => navigate("/#")}
+                onClick={() => navigate("/buy")}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Buy
@@ -159,13 +159,13 @@ function Navbar({ showModal }) {
                   Trade
                 </a>
               </li>
-              <li onClick={() => navigate("/#")}>
+              <li onClick={() => navigate("/liquidity")}>
                 <a>
                   <HandCoins size={15} />
                   Liquidity
                 </a>
               </li>
-              <li onClick={() => navigate("/#")}>
+              <li onClick={() => navigate("/buy")}>
                 <a>
                   <ShoppingBag size={15} />
                   Buy

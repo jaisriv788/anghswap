@@ -189,14 +189,14 @@ function App() {
         <Route path="/" element={<Landing showModal={visibility} />} />
         <Route path="/trade" element={<Trade showModal={visibility} />} />
         <Route
-          // path="/liquidity"
-          path="/liquidityabaljkhfosdjfvhilsdhvsi"
+          path="/liquidity"
+          // path="/liquidityabaljkhfosdjfvhilsdhvsi"
           element={<Liquidity showModal={visibility} />}
         />
         {/* <Route path="/withdraw" element={<Withdraw showModal={visibility} />} /> */}
         <Route
-          // path="/buy"
-          path="/buyfjbhsdfgshdgoisdhglishglisuygiu"
+          path="/buy"
+          // path="/buyfjbhsdfgshdgoisdhglishglisuygiu"
           element={<Buy showModal={visibility} />}
         />
         {/* <Route
