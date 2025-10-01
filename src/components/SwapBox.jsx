@@ -172,16 +172,16 @@ export default function SwapBox({ isVisible, showModal }) {
           setFetchingPrice(false);
           return;
         }
-        console.log("from");
+        // console.log("from");
         let result;
         let toValue;
         const amountIn = parseUnits(debouncedFromValue, fromTokenDecimal);
-        console.log({ amountIn });
+        // console.log({ amountIn });
         if (
           tokenFromAddress.toLowerCase() == USDT_ADDRESS.toLowerCase() ||
           tokenToAddress.toLowerCase() == USDT_ADDRESS.toLowerCase()
         ) {
-          console.log("usdt");
+          // console.log("usdt");
           result = await router.getAmountsOut(amountIn, [
             tokenFromAddress,
             tokenToAddress,
@@ -190,7 +190,7 @@ export default function SwapBox({ isVisible, showModal }) {
           toValue = formatUnits(result["1"], toTokenDecimal);
           // console.log({ amountIn, result, toValue });
         } else {
-          console.log("No usdt");
+          // console.log("No usdt");
 
           result = await router.getAmountsOut(amountIn, [
             tokenFromAddress,
@@ -415,6 +415,8 @@ export default function SwapBox({ isVisible, showModal }) {
   };
 
   const handleSwapButtonClick = async () => {
+    // console.log(typeof fromAmount);
+    // console.log(typeof toAmount);
     if (!isConnected) {
       connectWallet();
       return;
@@ -515,7 +517,7 @@ export default function SwapBox({ isVisible, showModal }) {
       );
 
       if (toToken == "ANGH") {
-        console.log("Withdrawing ANGH");
+        // console.log("Withdrawing ANGH");
         const withdrawTx = await withdrawInstance.withdraw(rawBalance);
         await withdrawTx.wait();
       }
@@ -640,7 +642,12 @@ export default function SwapBox({ isVisible, showModal }) {
                         b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
                     )?.balance
                   );
-                  // console.log(Math.floor(Date.now() / 1000) + 60 * 10)
+                  // console.log(
+                  //   walletBalance.find(
+                  //     (b) =>
+                  //       b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
+                  //   )?.balance
+                  // );
                 }}
                 className="absolute right-3 -bottom-7 font-semibold text-accent cursor-pointer hover:text-accent/80 transition ease-in-out duration-300"
               >

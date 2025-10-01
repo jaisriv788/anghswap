@@ -438,7 +438,7 @@ export default function BuyBox({ isVisible, showModal }) {
     // console.log("from Ran");
     if (e.target.value < 0) {
       setFromAmount("0");
-      return
+      return;
     }
     const rawValue = e.target.value;
     const wholeNumber = rawValue === "" ? "" : Math.floor(Number(rawValue));

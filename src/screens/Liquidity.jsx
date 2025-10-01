@@ -5,7 +5,7 @@ import factoryAbi from "../factoryAbi.json";
 import { ethers, formatUnits, parseUnits } from "ethers";
 import pairAbi from "../pairAbi.json";
 import useEthers from "../hooks/useEthers";
-import { Wallet } from "lucide-react";
+import { Copy, Wallet } from "lucide-react";
 import erc20Abi from "../ERC20Abi.json";
 import routerAbi from "../routerAbi.json";
 import Pools from "../components/Pools";
@@ -498,6 +498,7 @@ export default function Liquidity({ showModal }) {
       setInsufficientFundsOne(false);
       setInsufficientFundsTwo(false);
       setPairExist(false);
+      setPairAddress(null);
     }
   };
 
@@ -796,8 +797,30 @@ export default function Liquidity({ showModal }) {
                 </div>
               </div>
 
-              <h2 className="font-semibold">
-                {selectedToken1.symbol}/{selectedToken2.symbol}
+              <h2 className="font-semibold flex items-center gap-1">
+                {selectedToken1.symbol}/{selectedToken2.symbol}{" "}
+                {pairAddress &&
+                  "(" +
+                    pairAddress.slice(0, 4) +
+                    ".." +
+                    pairAddress.slice(-4) +
+                    ")"}
+                {pairAddress && (
+                  <Copy
+                    onClick={() => {
+                      navigator.clipboard
+                        .writeText(String(pairAddress))
+                        .then(() => {
+                          alert("Copied to clipboard!");
+                        })
+                        .catch((err) => {
+                          console.error("Failed to copy:", err);
+                        });
+                    }}
+                    size={14}
+                    className="cursor-pointer hover:text-gray-500 transition ease-in-out duration-300"
+                  />
+                )}
               </h2>
             </div>
 

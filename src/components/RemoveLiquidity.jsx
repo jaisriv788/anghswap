@@ -53,6 +53,8 @@ function RemoveLiquidity({ setShowRemoveModal, setClickedPool, data }) {
 
   useEffect(() => {
     if (removeAmount) calculateRemoveAmount();
+
+    console.log(pairAddress);
   }, [removeAmount]);
 
   async function calculateReceiveAmount() {
@@ -257,6 +259,12 @@ function RemoveLiquidity({ setShowRemoveModal, setClickedPool, data }) {
             <div className="text-gray-900 font-semibold">
               ~{parseFloat(data.userLP).toFixed(8)} LP
             </div>
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2 items-center">
+              <span className="text-sm font-medium text-gray-800">Address</span>
+            </div>
+            <div className="text-gray-900 font-semibold text-xs">{pairAddress}</div>
           </div>
         </div>
 
