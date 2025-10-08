@@ -921,16 +921,17 @@ export default function BuyBox({ isVisible, showModal }) {
             {isConnected ? (
               <button
                 onClick={handleSwapButtonClick}
-                disabled={
-                  (!toToken && !fromToken) ||
-                  fetchingPrice ||
-                  parseFloat(
-                    walletBalance.find(
-                      (b) =>
-                        b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
-                    )?.balance
-                  ) < parseFloat(fromAmount)
-                }
+                disabled
+                // disabled={
+                //   (!toToken && !fromToken) ||
+                //   fetchingPrice ||
+                //   parseFloat(
+                //     walletBalance.find(
+                //       (b) =>
+                //         b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
+                //     )?.balance
+                //   ) < parseFloat(fromAmount)
+                // }
                 className={`w-full relative overflow-hidden h-12 cursor-pointer text-accent-foreground  rounded-xl font-semibold transition-all duration-300 shadow-lg backdrop-blur-sm border
     ${
       toToken &&

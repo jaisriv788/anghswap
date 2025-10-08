@@ -15,7 +15,7 @@ import { isSettingModalVisible } from "../redux/slice/modalSlice";
 import { setAddress, setConnection } from "../redux/slice/userDetails";
 import iconSrc from "../assets/angh.png";
 
-function Navbar({ showModal }) {
+function Navbar({ showModal, setIsOpen }) {
   const [isVisible, setIsVisible] = useState(false);
   const [wallets, setWallets] = useState([]);
   const navigate = useNavigate();
@@ -92,9 +92,10 @@ function Navbar({ showModal }) {
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Withdraw
-              </a> */}
+              </a> */} 
               <a
-                onClick={() => navigate("/buy")}
+                // onClick={() => navigate("/buy")}
+                onClick={() => setIsOpen(true)}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Buy
@@ -165,7 +166,10 @@ function Navbar({ showModal }) {
                   Liquidity
                 </a>
               </li>
-              <li onClick={() => navigate("/buy")}>
+              <li
+                onClick={() => setIsOpen(true)}
+                // onClick={() => navigate("/buy")}
+              >
                 <a>
                   <ShoppingBag size={15} />
                   Buy

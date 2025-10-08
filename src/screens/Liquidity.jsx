@@ -317,7 +317,7 @@ export default function Liquidity({ showModal }) {
 
     try {
       setCreatePairLoading(true);
-      // console.log({ factoryAddress, provider, factoryAbi });
+      console.log({ factoryAddress, provider, factoryAbi });
       const factoryContractInstance = new ethers.Contract(
         factoryAddress,
         factoryAbi,

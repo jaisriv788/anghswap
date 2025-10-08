@@ -5,6 +5,7 @@ import Trade from "./screens/Trade";
 import Liquidity from "./screens/Liquidity";
 import Withdraw from "./screens/Withdraw";
 import TestingScreen from "./screens/TesingScreen";
+import Notice from "./components/Notice";
 import Buy from "./screens/Buy";
 import Setting from "./components/Settings";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +15,7 @@ import WalletOptions from "./components/WalletOptions";
 
 function App() {
   const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
   const isSetModalVisible = useSelector(
@@ -179,12 +181,19 @@ function App() {
         </div>
       )}
 
+      {isOpen && (
+        <Notice
+          setIsOpen={setIsOpen}
+          message="Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly."
+        />
+      )}
+
       {showModal && <WalletOptions showModal={visibility} />}
       <Setting
         isOpen={isSetModalVisible}
         onClose={() => dispatch(isSettingModalVisible(false))}
       />
-      <Navbar showModal={visibility} />
+      <Navbar showModal={visibility} setIsOpen={setIsOpen} />
       <Routes>
         <Route path="/" element={<Landing showModal={visibility} />} />
         <Route path="/trade" element={<Trade showModal={visibility} />} />
@@ -195,8 +204,8 @@ function App() {
         />
         {/* <Route path="/withdraw" element={<Withdraw showModal={visibility} />} /> */}
         <Route
-          path="/buy"
-          // path="/buyfjbhsdfgshdgoisdhglishglisuygiu"
+          // path="/buy"
+          path="/buyfjbhsdfgshdgoisdhglishglisuygiu"
           element={<Buy showModal={visibility} />}
         />
         {/* <Route
