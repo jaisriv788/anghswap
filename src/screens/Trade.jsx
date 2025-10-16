@@ -1,7 +1,7 @@
 import SwapBox from "../components/SwapBox";
 import { useState, useEffect } from "react";
 
-function Trade({ showModal }) {
+function Trade({ showModal, setIsOpen, setMsg }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ function Trade({ showModal }) {
   return (
     <div className="mt-25 flex justify-center">
       <div className="h-fit w-fit min-w-0 px-1 ">
-        <SwapBox isVisible={isVisible} showModal={showModal} />
+        <SwapBox isVisible={isVisible} showModal={showModal} setIsOpen={setIsOpen} setMsg={setMsg} />
       </div>
     </div>
   );

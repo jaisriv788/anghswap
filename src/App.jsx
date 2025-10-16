@@ -16,6 +16,7 @@ import WalletOptions from "./components/WalletOptions";
 function App() {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [msg, setMsg] = useState("")
 
   const dispatch = useDispatch();
   const isSetModalVisible = useSelector(
@@ -54,9 +55,9 @@ function App() {
 
     return () => {
       if (window.ethereum?.removeListener) {
-        window.ethereum.removeListener("accountsChanged", () => {});
-        window.ethereum.removeListener("chainChanged", () => {});
-        window.ethereum.removeListener("disconnect", () => {});
+        window.ethereum.removeListener("accountsChanged", () => { });
+        window.ethereum.removeListener("chainChanged", () => { });
+        window.ethereum.removeListener("disconnect", () => { });
       }
     };
   }, []);
@@ -184,7 +185,8 @@ function App() {
       {isOpen && (
         <Notice
           setIsOpen={setIsOpen}
-          message="Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly."
+          setMsg={setMsg}
+          message={msg}
         />
       )}
 
@@ -193,10 +195,10 @@ function App() {
         isOpen={isSetModalVisible}
         onClose={() => dispatch(isSettingModalVisible(false))}
       />
-      <Navbar showModal={visibility} setIsOpen={setIsOpen} />
+      <Navbar showModal={visibility} setIsOpen={setIsOpen} setMsg={setMsg} />
       <Routes>
-        <Route path="/" element={<Landing showModal={visibility} />} />
-        <Route path="/trade" element={<Trade showModal={visibility} />} />
+        <Route path="/" element={<Landing showModal={visibility} setIsOpen={setIsOpen} setMsg={setMsg} />} />
+        <Route path="/trade" element={<Trade showModal={visibility} setIsOpen={setIsOpen} setMsg={setMsg} />} />
         <Route
           path="/liquidity"
           // path="/liquidityabaljkhfosdjfvhilsdhvsi"

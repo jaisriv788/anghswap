@@ -4,7 +4,7 @@ import angh from "../assets/tokens/angh.jpg";
 import usdt from "../assets/tokens/usdt.png";
 import znx from "../assets/tokens/znx.png";
 
-export default function HomePage({ showModal }) {
+export default function HomePage({ showModal, setIsOpen, setMsg }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -25,9 +25,8 @@ export default function HomePage({ showModal }) {
                 animationDuration: `${8 + Math.random() * 12}s`,
                 width: `${10 + Math.random() * 30}px`,
                 height: `${10 + Math.random() * 30}px`,
-                animation: `float-up ${
-                  8 + Math.random() * 12
-                }s infinite linear`,
+                animation: `float-up ${8 + Math.random() * 12
+                  }s infinite linear`,
               }}
             ></div>
           ))}
@@ -45,9 +44,8 @@ export default function HomePage({ showModal }) {
                 animationDuration: `${15 + Math.random() * 15}s`,
                 width: `${50 + Math.random() * 100}px`,
                 height: `${50 + Math.random() * 100}px`,
-                animation: `float-around ${
-                  15 + Math.random() * 15
-                }s infinite ease-in-out`,
+                animation: `float-around ${15 + Math.random() * 15
+                  }s infinite ease-in-out`,
               }}
             ></div>
           ))}
@@ -66,16 +64,15 @@ export default function HomePage({ showModal }) {
           backgroundSize: "48px 48px, 48px 48px, 100% 100%, 100% 100%",
         }}
       />
-      
+
       <section className="min-h-screen flex items-center px-1 sm:px-6 lg:px-8 relative z-10 pt-20 sm:pt-16">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 lg:pb-0 pb-10 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div
-              className={`transition-all duration-1000 ${
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              } text-center lg:text-left`}
+              className={`transition-all duration-1000 ${isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+                } text-center lg:text-left`}
             >
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-foreground mb-4 sm:mb-6 leading-tight break-words">
                 Trade Crypto with
@@ -104,7 +101,7 @@ export default function HomePage({ showModal }) {
               </div>
             </div>
 
-            <SwapBox showModal={showModal} isVisible={isVisible} />
+            <SwapBox showModal={showModal} isVisible={isVisible} setIsOpen={setIsOpen} setMsg={setMsg} />
           </div>
         </div>
       </section>

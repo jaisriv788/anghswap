@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-function Notice({ setIsOpen, message }) {
+function Notice({ setIsOpen, message, setMsg }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative transform transition-all duration-300 scale-100 hover:scale-[1.02]">
@@ -39,7 +39,10 @@ function Notice({ setIsOpen, message }) {
         {/* Footer button */}
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              setMsg("")
+            }}
             className="px-5 py-2.5 cursor-pointer bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl shadow hover:opacity-90 active:scale-95 transition"
           >
             Got it

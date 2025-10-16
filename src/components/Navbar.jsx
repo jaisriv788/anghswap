@@ -15,7 +15,7 @@ import { isSettingModalVisible } from "../redux/slice/modalSlice";
 import { setAddress, setConnection } from "../redux/slice/userDetails";
 import iconSrc from "../assets/angh.png";
 
-function Navbar({ showModal, setIsOpen }) {
+function Navbar({ showModal, setIsOpen, setMsg }) {
   const [isVisible, setIsVisible] = useState(false);
   const [wallets, setWallets] = useState([]);
   const navigate = useNavigate();
@@ -56,9 +56,8 @@ function Navbar({ showModal, setIsOpen }) {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-40 bg-background/60 backdrop-blur-md border-b border-border transition-all duration-500 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
-      }`}
+      className={`fixed top-0 w-full z-40 bg-background/60 backdrop-blur-md border-b border-border transition-all duration-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -92,10 +91,13 @@ function Navbar({ showModal, setIsOpen }) {
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Withdraw
-              </a> */} 
+              </a> */}
               <a
                 // onClick={() => navigate("/buy")}
-                onClick={() => setIsOpen(true)}
+                onClick={() => {
+                  setIsOpen(true);
+                  setMsg("Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly.");
+                }}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Buy
@@ -167,8 +169,11 @@ function Navbar({ showModal, setIsOpen }) {
                 </a>
               </li>
               <li
-                onClick={() => setIsOpen(true)}
-                // onClick={() => navigate("/buy")}
+                onClick={() => {
+                  setIsOpen(true);
+                  setMsg("Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly.");
+                }}
+              // onClick={() => navigate("/buy")}
               >
                 <a>
                   <ShoppingBag size={15} />
