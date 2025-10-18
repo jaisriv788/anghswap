@@ -64,66 +64,7 @@ function App() {
 
   return (
     <div className="min-h-screen w-full bg-white relative overflow-hidden">
-      {/* <div
-        className="absolute inset-0 z-10"
-        style={{
-          backgroundImage: `
-        radial-gradient(125% 125% at 50% 10%, #ffffff 40%, #ec4899 100%)
-      `,
-          backgroundSize: "100% 100%",
-        }}
-      /> */}
-      {/* 
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `
-        linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-        linear-gradient(to bottom, #f0f0f0 1px, transparent 1px),
-        radial-gradient(circle 800px at 100% 200px, #d5c5ff, transparent)
-      `,
-          backgroundSize: "96px 64px, 96px 64px, 100% 100%",
-        }}
-      /> */}
 
-      {/* <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `
-        linear-gradient(135deg, 
-          rgba(248,250,252,1) 0%, 
-          rgba(219,234,254,0.7) 30%, 
-          rgba(165,180,252,0.5) 60%, 
-          rgba(129,140,248,0.6) 100%
-        ),
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.6) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(199,210,254,0.4) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(224,231,255,0.3) 0%, transparent 60%)
-      `,
-        }}
-      /> */}
-
-      {/* <div
-        className="absolute inset-0 z-0"
-        style={{
-          background: "#ffffff",
-          backgroundImage: `
-       radial-gradient(circle at top center, rgba(59, 130, 246, 0.5),transparent 70%)
-     `,
-        }}
-      /> */}
-
-      {/* <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `
-        linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-        linear-gradient(to bottom, #f0f0f0 1px, transparent 1px),
-        radial-gradient(circle 800px at 0% 200px, #d5c5ff, transparent)
-      `,
-          backgroundSize: "96px 64px, 96px 64px, 100% 100%",
-        }}
-      /> */}
 
       <div
         className="absolute inset-0 z-0"
@@ -206,8 +147,8 @@ function App() {
         />
         {/* <Route path="/withdraw" element={<Withdraw showModal={visibility} />} /> */}
         <Route
-          // path="/buy"
-          path="/buyfjbhsdfgshdgoisdhglishglisuygiu"
+          path="/buy"
+          // path="/buyfjbhsdfgshdgoisdhglishglisuygiu"
           element={<Buy showModal={visibility} />}
         />
         {/* <Route

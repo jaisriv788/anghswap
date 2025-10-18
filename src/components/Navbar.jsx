@@ -93,11 +93,11 @@ function Navbar({ showModal, setIsOpen, setMsg }) {
                 Withdraw
               </a> */}
               <a
-                // onClick={() => navigate("/buy")}
-                onClick={() => {
-                  setIsOpen(true);
-                  setMsg("Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly.");
-                }}
+                onClick={() => navigate("/buy")}
+                // onClick={() => {
+                //   setIsOpen(true);
+                //   setMsg("Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly.");
+                // }}
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium hover:scale-105 transform cursor-pointer duration-200"
               >
                 Buy
@@ -169,11 +169,11 @@ function Navbar({ showModal, setIsOpen, setMsg }) {
                 </a>
               </li>
               <li
-                onClick={() => {
-                  setIsOpen(true);
-                  setMsg("Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly.");
-                }}
-              // onClick={() => navigate("/buy")}
+                // onClick={() => {
+                //   setIsOpen(true);
+                //   setMsg("Our team is actively working to make opBNB to ANGH swap smoother and more user-friendly. An update will be shared with you shortly.");
+                // }}
+              onClick={() => navigate("/buy")}
               >
                 <a>
                   <ShoppingBag size={15} />
