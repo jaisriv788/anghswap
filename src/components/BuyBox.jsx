@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import TokenModal from "./TokenModal";
 import { useSelector, useDispatch } from "react-redux";
 import useEthers from "../hooks/useEthers";
-import { ethers, formatUnits, parseUnits, ZeroAddress } from "ethers";
+import {
+  BrowserProvider,
+  Contract,
+  formatUnits,
+  parseUnits,
+  ZeroAddress,
+} from "ethers";
 import routerAbi from "../routerAbi.json";
 import useBalance from "../hooks/useBalance";
 import erc20Abi from "../ERC20Abi.json";
@@ -34,7 +40,7 @@ export default function BuyBox({ isVisible, showModal }) {
   const [debouncedToValue, setDebouncedToValue] = useState("");
   const [debouncedFromValue, setDebouncedFromValue] = useState("");
   const [priceIntervalId, setPriceIntervalId] = useState(null);
-  const { connectWallet, provider, provider2, signer } = useEthers();
+  const { connectWallet, provider, provider2 } = useEthers();
   const dispatch = useDispatch();
   const isConnected = useSelector((state) => state.user.isConnected);
   const walletAddress = useSelector((state) => state.user.walletAddress);
@@ -133,6 +139,7 @@ export default function BuyBox({ isVisible, showModal }) {
       }
     }
   };
+
   const CHAIN_PARAMS2 = {
     chainId: "0xCC",
     chainName: "opBNB Mainnet",
@@ -171,6 +178,7 @@ export default function BuyBox({ isVisible, showModal }) {
       }
     }
   };
+
   const getTokenBySymbol = (symbol) => {
     return tokens.find(
       (token) => token.symbol.toLowerCase() === symbol.toLowerCase()
@@ -184,13 +192,15 @@ export default function BuyBox({ isVisible, showModal }) {
     tokens.find((t) => t.symbol === symbol)?.decimals;
 
   const getTokenPriceInUsd = async () => {
+    console.log({fromUSD, toUSD});
+    
     if (isConnected && toToken) {
       // const providerr = new ethers.JsonRpcProvider(
       //   "https://bsc-dataseed.binance.org/"
       // );
       // console.log("usd");
       setFetchingPrice(true);
-      const router = new ethers.Contract(ROUTER_ADDRESS, routerAbi, provider); //if Error replace provider with providerr
+      const router = new Contract(ROUTER_ADDRESS, routerAbi, provider); //if Error replace provider with providerr
       const tokenFromAddress = getTokenAddress(fromToken);
       const tokenToAddress = getTokenAddress(toToken);
       const fromTokenDecimal = getTokenDecimals(fromToken);
@@ -204,45 +214,43 @@ export default function BuyBox({ isVisible, showModal }) {
           setFetchingPrice(false);
           return;
         }
-        // console.log("from");
-        // let result;
+        let result;
         let toValue;
-        // const amountIn = parseUnits(debouncedFromValue, fromTokenDecimal);
-
-        // if (
-        //   tokenFromAddress.toLowerCase() == USDT_ADDRESS.toLowerCase() ||
-        //   tokenToAddress.toLowerCase() == USDT_ADDRESS.toLowerCase()
-        // ) {
-        //   // console.log("usdt");
-        //   result = await router.getAmountsOut(amountIn, [
-        //     tokenFromAddress,
-        //     tokenToAddress,
-        //   ]);
-
-        //   toValue = formatUnits(result["1"], toTokenDecimal);
-        //   // console.log({ amountIn, result, toValue });
-        // } else {
-        //   // console.log("No usdt");
-
-        //   result = await router.getAmountsOut(amountIn, [
-        //     tokenFromAddress,
-        //     USDT_ADDRESS,
-        //     tokenToAddress,
-        //   ]);
-
-        //   toValue = formatUnits(result["2"], toTokenDecimal);
-        // }
+        const amountIn = parseUnits(debouncedFromValue, fromTokenDecimal);
 
         if (parseFloat(fromAmount) > 0) {
           if (tokenFromAddress.toLowerCase() == USDT_ADDRESS.toLowerCase()) {
-            if (toToken == "ANGH" || toToken == "USDT-ANGH20") {
+            if (toToken == "USDT-ANGH20") {
               toValue = fromAmount;
+              console.log(typeof toValue);
+            } else if (toToken == "ANGH") {
+              result = await router.getAmountsOut(amountIn, [
+                "0xd1b7916d20F3b9D439B66AF25FC45f6A28c157d0",
+                tokenToAddress,
+              ]);
+
+              let val = formatUnits(result["1"], toTokenDecimal);
+
+              let arr = val.split(".");
+              arr[1] = arr[1].slice(0, 4);
+              toValue = arr.join(".");
             } else if (toToken == "ZNX") {
               toValue = parseFloat(fromAmount) / 10;
             }
           } else {
-            if (fromToken == "ANGH" || fromToken == "USDT-ANGH20") {
+            if (fromToken == "USDT-ANGH20") {
               toValue = fromAmount;
+            } else if (fromToken == "ANGH") {
+              result = await router.getAmountsOut(amountIn, [
+                tokenFromAddress,
+                "0xd1b7916d20F3b9D439B66AF25FC45f6A28c157d0",
+              ]);
+
+              let val = formatUnits(result["1"], fromTokenDecimal);
+
+              let arr = val.split(".");
+              arr[1] = arr[1].slice(0, 4);
+              toValue = arr.join(".");
             } else if (fromToken == "ZNX") {
               toValue = parseFloat(fromAmount) * 10;
             }
@@ -506,21 +514,28 @@ export default function BuyBox({ isVisible, showModal }) {
       const tokenB = getTokenBySymbol(toToken);
 
       const value = parseUnits(fromAmount, 18);
-
+      const prov = provider2 || window.ethereum;
       let txHash;
       let srcChain;
       let destChain;
       const recipient = walletAddress;
       if (tokenA.symbol == "USDT-OpBNB") {
         console.log("1");
+
         await switchNetworkToOpBNB(provider2 || window.ethereum);
         console.log("2");
 
-        const bridge = new ethers.Contract(OPBNB_BRIDGE, opBridgeAbi, signer);
+        const ethersProvider = new BrowserProvider(prov);
+        const signer = await ethersProvider.getSigner();
+
+        const bridge = new Contract(OPBNB_BRIDGE, opBridgeAbi, signer);
         console.log(tokenA.address);
 
-        const usdt = new ethers.Contract(tokenA.address, erc20Abi, signer);
+        const usdt = new Contract(tokenA.address, erc20Abi, signer);
+        console.log({ value });
+
         const allowance = await usdt.allowance(walletAddress, OPBNB_BRIDGE);
+
         if (allowance < value) {
           console.log({ OPBNB_BRIDGE, value });
 
@@ -541,7 +556,10 @@ export default function BuyBox({ isVisible, showModal }) {
         await switchNetworkToAngh(provider2 || window.ethereum);
         console.log("2a");
 
-        const bridge = new ethers.Contract(ANGH_BRIDGE, anghBridgeAbi, signer);
+        const ethersProvider = new BrowserProvider(prov);
+        const signer = await ethersProvider.getSigner();
+
+        const bridge = new Contract(ANGH_BRIDGE, anghBridgeAbi, signer);
         if (tokenA.symbol == "ANGH") {
           console.log("3a");
 
@@ -554,11 +572,7 @@ export default function BuyBox({ isVisible, showModal }) {
         } else {
           console.log(tokenA.address);
 
-          const tokenCtr = new ethers.Contract(
-            tokenA.address,
-            erc20Abi,
-            signer
-          );
+          const tokenCtr = new Contract(tokenA.address, erc20Abi, signer);
           console.log("5a");
 
           const allowance = await tokenCtr.allowance(
@@ -616,7 +630,10 @@ export default function BuyBox({ isVisible, showModal }) {
         if (destChain === "opbnb") {
           await switchNetworkToOpBNB(provider2 || window.ethereum);
 
-          const bridge = new ethers.Contract(OPBNB_BRIDGE, opBridgeAbi, signer);
+          const ethersProvider = new BrowserProvider(prov);
+          const signer = await ethersProvider.getSigner();
+
+          const bridge = new Contract(OPBNB_BRIDGE, opBridgeAbi, signer);
           const amount = parseUnits(toAmount, 18);
           const tx = await bridge.claim(
             270504,
@@ -631,11 +648,11 @@ export default function BuyBox({ isVisible, showModal }) {
           await switchNetworkToAngh(provider2 || window.ethereum);
         } else {
           await switchNetworkToAngh(provider2 || window.ethereum);
-          const bridge = new ethers.Contract(
-            ANGH_BRIDGE,
-            anghBridgeAbi,
-            signer
-          );
+
+          const ethersProvider = new BrowserProvider(prov);
+          const signer = await ethersProvider.getSigner();
+
+          const bridge = new Contract(ANGH_BRIDGE, anghBridgeAbi, signer);
 
           const amount = parseUnits(toAmount, 18);
           let tx;
@@ -690,7 +707,7 @@ export default function BuyBox({ isVisible, showModal }) {
         setToAmount("");
         setLoading(false);
         setBalanceRefresh((prev) => prev + 1);
-        setToToken(null);
+        // setToToken(null);
         // setTimeout(() => {
         //   window.location.reload();
         // }, 3000);
@@ -705,8 +722,9 @@ export default function BuyBox({ isVisible, showModal }) {
       console.error("Approval failed:", err);
       setLoading(false);
       showError("Transaction Failed!");
-      window.location.reload();
+      // window.location.reload();
     } finally {
+      await switchNetworkToAngh(provider2 || window.ethereum);
       setBalanceRefresh((prev) => prev + 1);
     }
   };
@@ -921,17 +939,17 @@ export default function BuyBox({ isVisible, showModal }) {
             {isConnected ? (
               <button
                 onClick={handleSwapButtonClick}
-                disabled
-                // disabled={
-                //   (!toToken && !fromToken) ||
-                //   fetchingPrice ||
-                //   parseFloat(
-                //     walletBalance.find(
-                //       (b) =>
-                //         b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
-                //     )?.balance
-                //   ) < parseFloat(fromAmount)
-                // }
+                // disabled
+                disabled={
+                  (!toToken && !fromToken) ||
+                  fetchingPrice ||
+                  parseFloat(
+                    walletBalance.find(
+                      (b) =>
+                        b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
+                    )?.balance
+                  ) < parseFloat(fromAmount)
+                }
                 className={`w-full relative overflow-hidden h-12 cursor-pointer text-accent-foreground  rounded-xl font-semibold transition-all duration-300 shadow-lg backdrop-blur-sm border
     ${
       toToken &&

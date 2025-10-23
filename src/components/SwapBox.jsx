@@ -419,9 +419,19 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
     // console.log(typeof toAmount);
 
     if (fromToken == "ZNX" && toToken == "USDT-ANGH20") {
-      setIsOpen(true)
-      setMsg("The ability to swap between ZNX and USDT-ANGH20 is temporarily suspended. We are working to restore this service as soon as possible.")
-      return
+      setIsOpen(true);
+      setMsg(
+        "The ability to swap between ZNX and USDT-ANGH20 is temporarily suspended. We are working to restore this service as soon as possible."
+      );
+      return;
+    }
+
+    if (fromToken == "ANGH" && toToken == "USDT-ANGH20") {
+      setIsOpen(true);
+      setMsg(
+        "The ability to swap between ANGH and USDT-ANGH20 is temporarily suspended. We are working to restore this service as soon as possible."
+      );
+      return;
     }
     if (!isConnected) {
       connectWallet();
@@ -560,8 +570,9 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
   return (
     <>
       <div
-        className={`transition-all duration-1500 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          } mt-8 lg:mt-0 flex justify-center lg:justify-end`}
+        className={`transition-all duration-1500 delay-500 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+        } mt-8 lg:mt-0 flex justify-center lg:justify-end`}
       >
         <div className="bg-card border border-border rounded-2xl p-4 sm:p-6 w-full max-w-md shadow-2xl backdrop-blur-sm overflow-hidden">
           <div className="space-y-4">
@@ -571,16 +582,16 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
                   From: <Wallet size={15} />
                   {isConnected
                     ? walletBalance.find(
-                      (b) =>
-                        b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
-                    )?.balance
+                        (b) =>
+                          b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
+                      )?.balance
                       ? parseFloat(
-                        walletBalance.find(
-                          (b) =>
-                            b?.symbol?.toLowerCase() ===
-                            fromToken?.toLowerCase()
-                        )?.balance
-                      ).toFixed(4)
+                          walletBalance.find(
+                            (b) =>
+                              b?.symbol?.toLowerCase() ===
+                              fromToken?.toLowerCase()
+                          )?.balance
+                        ).toFixed(4)
                       : "0.0000"
                     : "0.0000"}
                 </span>
@@ -637,8 +648,8 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
                   (b) => b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
                 )?.balance
               ) < parseFloat(fromAmount) && (
-                  <span className="text-red-400">Insufficient balance</span>
-                )}
+                <span className="text-red-400">Insufficient balance</span>
+              )}
               <span
                 onClick={() => {
                   setFromAmount(
@@ -680,16 +691,16 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
                   To: <Wallet size={15} />
                   {toToken
                     ? walletBalance.find(
-                      (b) =>
-                        b?.symbol?.toLowerCase() === toToken?.toLowerCase()
-                    )?.balance
+                        (b) =>
+                          b?.symbol?.toLowerCase() === toToken?.toLowerCase()
+                      )?.balance
                       ? parseFloat(
-                        walletBalance.find(
-                          (b) =>
-                            b?.symbol?.toLowerCase() ===
-                            toToken?.toLowerCase()
-                        )?.balance
-                      ).toFixed(4)
+                          walletBalance.find(
+                            (b) =>
+                              b?.symbol?.toLowerCase() ===
+                              toToken?.toLowerCase()
+                          )?.balance
+                        ).toFixed(4)
                       : "0.0000"
                     : "0.0000"}
                 </span>
@@ -768,17 +779,18 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
                   ) < parseFloat(fromAmount)
                 }
                 className={`w-full relative overflow-hidden h-12 cursor-pointer text-accent-foreground  rounded-xl font-semibold transition-all duration-300 shadow-lg backdrop-blur-sm border
-    ${toToken &&
-                    parseFloat(
-                      walletBalance.find(
-                        (b) => b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
-                      )?.balance
-                    ) >= parseFloat(fromAmount) &&
-                    fromToken &&
-                    !fetchingPrice
-                    ? "bg-gradient-to-r from-accent to-accent/90 hover:scale-105 active:scale-95 hover:shadow-xl border-accent/20"
-                    : "bg-gray-500 cursor-not-allowed"
-                  }`}
+    ${
+      toToken &&
+      parseFloat(
+        walletBalance.find(
+          (b) => b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
+        )?.balance
+      ) >= parseFloat(fromAmount) &&
+      fromToken &&
+      !fetchingPrice
+        ? "bg-gradient-to-r from-accent to-accent/90 hover:scale-105 active:scale-95 hover:shadow-xl border-accent/20"
+        : "bg-gray-500 cursor-not-allowed"
+    }`}
               >
                 {loading ? (
                   <div className="absolute inset-0 bg-black/60 z-50 backdrop-blur-lg flex items-center justify-center">
@@ -788,11 +800,11 @@ export default function SwapBox({ isVisible, showModal, setIsOpen, setMsg }) {
                   fetchingPrice ? (
                     "Fetching Best Price..."
                   ) : parseFloat(
-                    walletBalance.find(
-                      (b) =>
-                        b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
-                    )?.balance
-                  ) < parseFloat(fromAmount) ? (
+                      walletBalance.find(
+                        (b) =>
+                          b?.symbol?.toLowerCase() === fromToken?.toLowerCase()
+                      )?.balance
+                    ) < parseFloat(fromAmount) ? (
                     "Insufficient Balance"
                   ) : (
                     "Swap Tokens"

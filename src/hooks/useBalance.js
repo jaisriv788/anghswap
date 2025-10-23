@@ -47,7 +47,7 @@ export default function useBalances(provider, tokens, refreshTrigger = 0) {
               contract.symbol(),
             ]);
 
-            console.log({ rawBal, decimals, symbol });
+            // console.log({ rawBal, decimals, symbol });
             results.push({
               symbol:"USDT-OpBNB",
               balance: ethers.formatUnits(rawBal, decimals),
@@ -80,7 +80,7 @@ export default function useBalances(provider, tokens, refreshTrigger = 0) {
           balance: ethers.formatEther(nativeBal),
         });
 
-        console.log({ results });
+        // console.log({ results });
         setBalances(results);
         setFetched(true);
       } catch (err) {
